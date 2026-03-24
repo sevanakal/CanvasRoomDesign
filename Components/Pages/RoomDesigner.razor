@@ -10,7 +10,7 @@
             <div class="content">
                 <ul>
                     <li>
-                        <button class="tool-btn" title="Koltuk" data-tooltip="Koltuk">
+                        <button class="tool-btn" data-tooltip="Koltuk" @onclick="()=>AddNewItem(DesignItemType.armchair)">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3"></path>
                                 <path d="M3 11v5a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H7v-2a2 2 0 0 0-4 0Z"></path>
@@ -20,7 +20,7 @@
                         </button>
                     </li>
                     <li>
-                        <button class="tool-btn" title="Sandalye" data-tooltip="Sandalye">
+                    <button class="tool-btn" data-tooltip="Sandalye" @onclick="() => AddNewItem(DesignItemType.chair)">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M7 4v7"></path>
                                 <path d="M17 4v7"></path>
@@ -31,7 +31,7 @@
                         </button>
                     </li>
                     <li>
-                        <button class="tool-btn" title="Masa" data-tooltip="Masa">
+                    <button class="tool-btn" data-tooltip="Masa" @onclick="() => AddNewItem(DesignItemType.table)">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M3 8h18v3H3z"></path>
                                 <path d="M5 11v10"></path>
@@ -42,7 +42,7 @@
                         </button>
                     </li>
                     <li>
-                        <button class="tool-btn" title="Sahne" data-tooltip="Sahne">
+                    <button class="tool-btn" data-tooltip="Sahne" @onclick="() => AddNewItem(DesignItemType.stage)">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M2 16h20v4H2z"></path>
                                 <path d="M6 16v-4"></path>
@@ -62,7 +62,14 @@
         </div>
 
         <div class="canvas-area">
-            asd
+            @foreach (var item in appState.Items)
+            {
+            <div class="design-item @(item.IsSelected ? "selected" : "")"
+                 style="left: @(item.X)px; top: @(item.Y)px; width: @(item.Width)px; height: @(item.Height)px; background-color: @(item.Color)"
+                 @onclick="() => appState.SelectItem(item)">
+                @GetItemIcon(item.Type)
+            </div>
+            }
         </div>
     
     

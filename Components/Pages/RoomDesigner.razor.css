@@ -37,6 +37,25 @@
     overflow: hidden;
 }
 
+/* Sahnedeki Koltuk/Masa/Sahne Kutusu */
+.design-item {
+    position: absolute; /* Canvas'ın içinde özgürce hareket etsin */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3); /* Zeminden hafif yüksek dursun */
+    user-select: none; /* Üstüne tıklayınca mavi seçim çıkmasın */
+    transition: border 0.1s ease;
+}
+
+    /* Tıklanıp "Seçili" hale gelince (Mimarın vurgusu) */
+    .design-item.selected {
+        border: 2px solid #007bff; /* Mavi şık bir çerçeve */
+        box-shadow: 0 0 12px rgba(0, 123, 255, 0.6); /* Mavi bir parlama efekti */
+    }
+
 .toolbox {
     position: absolute;
     z-index: 110;
