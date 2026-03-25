@@ -49,7 +49,7 @@ namespace CanvasRoomDesign.Components.Pages
                 IsSellable = isSellable
             };
             PrefixNumber++;
-            appState.Items.Add(newItem);
+            appState.AddItem(newItem);
 
         }
 
