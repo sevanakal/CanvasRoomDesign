@@ -16,6 +16,9 @@ namespace CanvasRoomDesign.Components.Pages
 
         private double ScreenX = 0, ScreenY = 0;
 
+        public string PrefixName = "A";
+        public int PrefixNumber = 1;
+
         private DesignerState appState = new DesignerState();
         /*End Parameters*/
 
@@ -28,22 +31,24 @@ namespace CanvasRoomDesign.Components.Pages
         {
             var (width, height, color, isSellable) = itemType switch
             {
-                DesignItemType.armchair => (40, 40, "#999999", true),
-                DesignItemType.chair => (40, 40, "#999999", true),
+                DesignItemType.armchair => (60, 60, "#999999", true),
+                DesignItemType.chair => (60, 60, "#999999", true),
                 DesignItemType.table => (150, 75, "#000000", false),
                 DesignItemType.stage => (200, 150, "#000000", false),
                 _ => (40, 40, "#333333", false)
             };
             DesignItem newItem = new DesignItem
             {
+                Name = PrefixName + "-" + PrefixNumber,
                 Type = itemType,
-                X = appState.GetLastItem()?.X + 60 ?? 200,
+                X = appState.GetLastItem()?.X + 80 ?? 200,
                 Y = 200,
                 Width = width,
                 Height = height,
                 Color = color,
                 IsSellable = isSellable
             };
+            PrefixNumber++;
             appState.Items.Add(newItem);
 
         }

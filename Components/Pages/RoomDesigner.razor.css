@@ -41,6 +41,7 @@
 .design-item {
     position: absolute; /* Canvas'ın içinde özgürce hareket etsin */
     display: flex;
+    flex-direction:column;
     justify-content: center;
     align-items: center;
     cursor: pointer;
@@ -84,7 +85,7 @@
     background-color: rgb(13, 127, 137);
 }
 
-.toolbox .content ul{
+.toolbox .content .tool-list{
     list-style:none;
     padding:0;
     margin:0;
@@ -93,15 +94,64 @@
     display:flex;
     flex-direction:column;
     gap:5px;
+    margin-bottom:15px;
     
 }
 
-.toolbox .content li{
+.toolbox .content .tool-list li{
     display:flex;
     justify-content:center;
     align-items:center;
     width:100%;
     padding:5px 0;
+}
+
+.toolbox .parameters-list {
+    list-style:none;
+    margin:0;
+    padding:0;
+    margin:5px 0 10px 0;
+}
+
+.toolbox .parameters-list li {
+    display:block;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    text-align:center;
+    margin-bottom:8px;
+}
+
+.toolbox .parameters-label{
+    font-size:12px;
+    font-weight:800;
+    color:#666666;
+}
+
+.toolbox .parameters-input {
+    font-size: 10px;
+    background-color: #e9ecef;
+    border: 1px solid;
+    width: 30px;
+    text-align: center;
+    font-weight: 600;
+    user-select: none;
+    border-radius: 4px;
+    text-transform: uppercase;
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox için okları gizleme (Mimar her tarayıcıyı düşünür!) */
+input[type="number"] {
+    -moz-appearance: textfield;
 }
 
 /* 1. Butonu Hazırla (Tooltip bunun içinde hizalanacak) */
