@@ -155,8 +155,8 @@ namespace CanvasRoomDesign.Components.Pages
             isDraggingToolBox = false;
 
             isSelecting = false;
-            
 
+            
         }
 
 
@@ -164,16 +164,13 @@ namespace CanvasRoomDesign.Components.Pages
 
         private void OnCanvasMouseDown(MouseEventArgs e)
         {
-            if (!e.CtrlKey)
-            {
-                appState.ClearSelection();
-            }
-
+            
             isSelecting = true;
             startX = e.ClientX;
             startY = e.ClientY;
             currentX = startX;
             currentY = startY;
+            appState.ClearSelection();
         }
 
 
