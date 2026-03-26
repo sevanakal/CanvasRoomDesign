@@ -37,6 +37,15 @@
     overflow: hidden;
 }
 
+/* Windows Klasör Seçim Kutusu Stili */
+.selection-box {
+    position: absolute;
+    border: 1px solid rgba(0, 120, 215, 0.8);
+    background-color: rgba(0, 120, 215, 0.2); /* Yarı saydam mavi */
+    pointer-events: none; /* Farenin kutuya takılmasını engeller, altını delip geçer */
+    z-index: 1000; /* Her şeyin üstünde görünsün */
+}
+
 /* Sahnedeki Koltuk/Masa/Sahne Kutusu */
 .design-item {
     position: absolute; /* Canvas'ın içinde özgürce hareket etsin */
@@ -49,6 +58,7 @@
     box-shadow: 0 4px 6px rgba(0,0,0,0.3); /* Zeminden hafif yüksek dursun */
     user-select: none; /* Üstüne tıklayınca mavi seçim çıkmasın */
     transition: border 0.1s ease;
+    z-index:900;
 }
 
     /* Tıklanıp "Seçili" hale gelince (Mimarın vurgusu) */

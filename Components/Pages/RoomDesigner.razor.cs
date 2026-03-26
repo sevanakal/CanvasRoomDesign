@@ -20,6 +20,14 @@ namespace CanvasRoomDesign.Components.Pages
         public int PrefixNumber = 1;
 
         private DesignerState appState = new DesignerState();
+
+        //Seçim alanı için kullanılacak değişkenler
+        private bool isSelecting = false;
+        private double startX, startY, currentX, currentY;
+        private double SelectionBoxX => Math.Min(startX, currentX);
+        private double SelectionBoxY => Math.Min(startY, currentY);
+        private double SelectionBoxWidth => Math.Abs(currentX - startX);
+        private double SelectionBoxHeight => Math.Abs(currentY - startY);
         /*End Parameters*/
 
         protected override void OnInitialized()
@@ -117,6 +125,27 @@ namespace CanvasRoomDesign.Components.Pages
                 ToolBoxX = e.ClientX - ToolBoxDragOffsetX;
                 ToolBoxY = e.ClientY - ToolBoxDragOffsetY;
             }
+            
+            if (isSelecting)
+            {
+                currentX = e.ClientX;
+                currentY = e.ClientY;
+                foreach (var item in appState.Items)
+                {
+                    bool intersectX = item.X < SelectionBoxX + SelectionBoxWidth && (item.X + item.Width) > SelectionBoxX;
+                    bool intersectY = item.Y < SelectionBoxY + SelectionBoxHeight && (item.Y + item.Height) > SelectionBoxY;
+
+                    if (intersectX && intersectY)
+                    {
+                        appState.SelectItem(item, notify:false);
+                    }
+                    else
+                    {
+                        appState.DeSelectItem(item, notify: false);
+                    }
+                   
+                }
+            }
             ScreenX = e.ClientX;
             ScreenY = e.ClientY;
         }
@@ -124,9 +153,28 @@ namespace CanvasRoomDesign.Components.Pages
         private void OnMouseUpCanvas(MouseEventArgs e) //Canvas üzerinde mouse kontrolü bırakıldığında
         {
             isDraggingToolBox = false;
+
+            isSelecting = false;
+            
+
         }
 
 
+        
+
+        private void OnCanvasMouseDown(MouseEventArgs e)
+        {
+            if (!e.CtrlKey)
+            {
+                appState.ClearSelection();
+            }
+
+            isSelecting = true;
+            startX = e.ClientX;
+            startY = e.ClientY;
+            currentX = startX;
+            currentY = startY;
+        }
 
 
 

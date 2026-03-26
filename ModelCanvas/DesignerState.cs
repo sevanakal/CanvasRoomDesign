@@ -28,14 +28,17 @@
             Items.ForEach(i => i.IsSelected = false);
             NotifyStateChanged();
         }
-        public void SelectItem(DesignItem item, bool isMultiSelect = false)
+        public void SelectItem(DesignItem item, bool notify = true)
         {
-            if (!isMultiSelect)
-            {
-                ClearSelection();
-            }
             item.IsSelected = true;
-            NotifyStateChanged();
+            if (notify) NotifyStateChanged();
+        }
+
+        public void DeSelectItem(DesignItem item, bool notify = true)
+        {
+            item.IsSelected = false;
+            if (notify) NotifyStateChanged();
+
         }
 
         public DesignItem? GetLastItem() => Items.LastOrDefault();

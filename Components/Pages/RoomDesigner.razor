@@ -2,7 +2,7 @@
 @rendermode InteractiveServer
 <div class="app-container" @onmousemove="OnMouseMoveCanvas" @onmouseup="OnMouseUpCanvas">
     <div class="status-bar">
-        ToolboxX: @ScreenX ToolBoxY: @ScreenY
+        ToolboxX: @ScreenX ToolBoxY: @ScreenY // StartX: @startX StartY: @startY
     </div>
     
         <div class="toolbox" style="left: @(ToolBoxX)px; top: @(ToolBoxY)px">
@@ -70,19 +70,22 @@
             </div>
         </div>
 
-        <div class="canvas-area">
+        <div class="canvas-area" @onmousedown="OnCanvasMouseDown">
             @foreach (var item in appState.Items)
             {
             <div class="design-item @(item.IsSelected ? "selected" : "")"
                  style="left: @(item.X)px; top: @(item.Y)px; width: @(item.Width)px; height: @(item.Height)px; background-color: @(item.Color)"
-                 @onclick="() => appState.SelectItem(item)">
+                 @onclick="() => appState.SelectItem(item)" @onmousedown:stopPropagation="true">
                 @GetItemIcon(item.Type)
                 <label>@item.Name</label>
             </div>
             }
         </div>
     
-    
+    @if (isSelecting)
+    {
+        <div class="selection-box" style="left: @(SelectionBoxX)px; top: @(SelectionBoxY)px; width: @(SelectionBoxWidth)px; height: @(SelectionBoxHeight)px"></div>
+    }
 
 
 </div>
