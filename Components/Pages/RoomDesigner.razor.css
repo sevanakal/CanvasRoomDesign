@@ -74,7 +74,7 @@
 
 .toolbox {
     position: absolute;
-    z-index: 110;
+    z-index: 1100;
     border: 1px solid #d1d5db; /* Çok zarif, açık gri bir çerçeve */
     border-radius: 8px; /* Köşeleri hafifçe yumuşat (Modern hissiyat) */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Havada süzülmesini sağlayan o sihirli gölge! */

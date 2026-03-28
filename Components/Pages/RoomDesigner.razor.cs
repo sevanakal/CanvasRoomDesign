@@ -16,6 +16,8 @@ namespace CanvasRoomDesign.Components.Pages
 
         private double ScreenX = 0, ScreenY = 0;
 
+        private bool isDraggingDesignItem = false;
+
         public string PrefixName = "A";
         public int PrefixNumber = 1;
 
@@ -106,6 +108,7 @@ namespace CanvasRoomDesign.Components.Pages
                         </svg>
             "
         };
+
         private void OnToolBoxMouseDown(MouseEventArgs e)//Toolboxda Header tıklandığında x y koordinatlarının girilmesi
         {
             isDraggingToolBox = true;
@@ -174,7 +177,24 @@ namespace CanvasRoomDesign.Components.Pages
         }
 
 
+        private void DesignItemClick(MouseEventArgs e, DesignItem item) 
+        {
+            if (!isSelecting)
+            {
+                appState.ClearSelection();
+                appState.SelectItem(item, notify: true);
+            }
+        }
 
+        private void DesignItemMouseDown(MouseEventArgs e)
+        {
+            if (e.Button == 0) isDraggingDesignItem = true;
+        }
+
+        private void DesignItemMouseUp(MouseEventArgs e)
+        {
+            isDraggingDesignItem = false;
+        }
 
 
     }

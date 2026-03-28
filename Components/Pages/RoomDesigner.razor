@@ -2,7 +2,8 @@
 @rendermode InteractiveServer
 <div class="app-container" @onmousemove="OnMouseMoveCanvas" @onmouseup="OnMouseUpCanvas">
     <div class="status-bar">
-        ToolboxX: @ScreenX ToolBoxY: @ScreenY // StartX: @startX StartY: @startY
+        ToolboxX: @ScreenX ToolBoxY: @ScreenY // StartX: @startX StartY: @startY || Secili Liste: @appState.SelectedItems.Count()
+        || Nesnenin Basili durumu: @isDraggingDesignItem.ToString()
     </div>
     
         <div class="toolbox" style="left: @(ToolBoxX)px; top: @(ToolBoxY)px">
@@ -75,7 +76,7 @@
             {
             <div class="design-item @(item.IsSelected ? "selected" : "")"
                  style="left: @(item.X)px; top: @(item.Y)px; width: @(item.Width)px; height: @(item.Height)px; background-color: @(item.Color)"
-                 @onclick="() => appState.SelectItem(item)" @onmousedown:stopPropagation="true">
+                 @onclick="(e) => DesignItemClick(e, item)" @onmousedown="DesignItemMouseDown" @onmouseup="DesignItemMouseUp" @onmousedown:stopPropagation="true">
                 @GetItemIcon(item.Type)
                 <span>@item.Name</span>
             </div>
