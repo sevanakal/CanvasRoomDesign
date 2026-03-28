@@ -77,7 +77,7 @@
                  style="left: @(item.X)px; top: @(item.Y)px; width: @(item.Width)px; height: @(item.Height)px; background-color: @(item.Color)"
                  @onclick="() => appState.SelectItem(item)" @onmousedown:stopPropagation="true">
                 @GetItemIcon(item.Type)
-                <label>@item.Name</label>
+                <span>@item.Name</span>
             </div>
             }
         </div>

@@ -53,7 +53,7 @@
     flex-direction:column;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
+    cursor: grab;
     border-radius: 6px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.3); /* Zeminden hafif yüksek dursun */
     user-select: none; /* Üstüne tıklayınca mavi seçim çıkmasın */
@@ -61,11 +61,16 @@
     z-index:900;
 }
 
-    /* Tıklanıp "Seçili" hale gelince (Mimarın vurgusu) */
-    .design-item.selected {
-        border: 2px solid #007bff; /* Mavi şık bir çerçeve */
-        box-shadow: 0 0 12px rgba(0, 123, 255, 0.6); /* Mavi bir parlama efekti */
-    }
+
+/* Tıklanıp "Seçili" hale gelince (Mimarın vurgusu) */
+.design-item.selected {
+    border: 2px solid #007bff; /* Mavi şık bir çerçeve */
+    box-shadow: 0 0 12px rgba(0, 123, 255, 0.6); /* Mavi bir parlama efekti */
+}
+
+.design-item:active{
+    cursor:grabbing;
+}
 
 .toolbox {
     position: absolute;
