@@ -3,7 +3,7 @@
 <div class="app-container" @onmousemove="OnMouseMoveCanvas" @onmouseup="OnMouseUpCanvas">
     <div class="status-bar">
         ToolboxX: @ScreenX ToolBoxY: @ScreenY // StartX: @startX StartY: @startY || Secili Liste: @appState.SelectedItems.Count()
-        || Nesnenin Basili durumu: @isDraggingDesignItem.ToString()
+        || Nesnenin Basili durumu: @isDraggingDesignItem.ToString() || DesignItemX: @CurrentDesignItemX DesignItenY: @CurrentDesignItemY
     </div>
     
         <div class="toolbox" style="left: @(ToolBoxX)px; top: @(ToolBoxY)px">
@@ -76,14 +76,14 @@
             {
             <div class="design-item @(item.IsSelected ? "selected" : "")"
                  style="left: @(item.X)px; top: @(item.Y)px; width: @(item.Width)px; height: @(item.Height)px; background-color: @(item.Color)"
-                 @onclick="(e) => DesignItemClick(e, item)" @onmousedown="DesignItemMouseDown" @onmouseup="DesignItemMouseUp" @onmousedown:stopPropagation="true">
+                 @onclick="e => DesignItemClick(e, item)" @onmousedown="e=>DesignItemMouseDown(e, item)" @onmouseup="DesignItemMouseUp" @onmousedown:stopPropagation="true">
                 @GetItemIcon(item.Type)
                 <span>@item.Name</span>
             </div>
             }
         </div>
     
-    @if (isSelecting)
+    @if (isSelectingArea)
     {
         <div class="selection-box" style="left: @(SelectionBoxX)px; top: @(SelectionBoxY)px; width: @(SelectionBoxWidth)px; height: @(SelectionBoxHeight)px"></div>
     }

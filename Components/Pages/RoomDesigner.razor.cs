@@ -14,6 +14,10 @@ namespace CanvasRoomDesign.Components.Pages
         private bool isDraggingToolBox = false; //Toolbox seçili olup olmadığının kontrolu
         private double ToolBoxDragOffsetX = 0, ToolBoxDragOffsetY = 0; //Fare ile nesne seçildiğinde x,y koordinatlarının tutulması
 
+        private double CurrentDesignItemX = 0, CurrentDesignItemY = 0;
+
+        private double lastMouseX, lastMouseY;
+
         private double ScreenX = 0, ScreenY = 0;
 
         private bool isDraggingDesignItem = false;
@@ -24,7 +28,7 @@ namespace CanvasRoomDesign.Components.Pages
         private DesignerState appState = new DesignerState();
 
         //Seçim alanı için kullanılacak değişkenler
-        private bool isSelecting = false;
+        private bool isSelectingArea = false;
         private double startX, startY, currentX, currentY;
         private double SelectionBoxX => Math.Min(startX, currentX);
         private double SelectionBoxY => Math.Min(startY, currentY);
@@ -129,7 +133,7 @@ namespace CanvasRoomDesign.Components.Pages
                 ToolBoxY = e.ClientY - ToolBoxDragOffsetY;
             }
             
-            if (isSelecting)
+            if (isSelectingArea)
             {
                 currentX = e.ClientX;
                 currentY = e.ClientY;
@@ -149,6 +153,42 @@ namespace CanvasRoomDesign.Components.Pages
                    
                 }
             }
+
+            if (isDraggingDesignItem)
+            {
+                // 1. Izgara boyutumuzu belirliyoruz
+                int snapSize = 20;
+
+                // 2. Farenin "Bir önceki hareket ettiği noktadan" ne kadar uzaklaştığını bul
+                double rawDeltaX = e.ClientX - lastMouseX;
+                double rawDeltaY = e.ClientY - lastMouseY;
+
+                // 3. İŞTE SİHİR BURADA: Fare 20'nin katı kadar (tam adım) ilerledi mi?
+                // Örnek: Fare 35px gittiyse (35 / 20 = 1 tam adım). Fare 15px gittiyse (15 / 20 = 0 adım).
+                int stepsX = (int)(rawDeltaX / snapSize);
+                int stepsY = (int)(rawDeltaY / snapSize);
+
+                // Eğer X veya Y ekseninde en az 1 tam adım (20px) atıldıysa harekete geç!
+                if (stepsX != 0 || stepsY != 0)
+                {
+                    // Atılan tam adımı tekrar 20 ile çarpıp gerçek uygulanacak pikseli bul (Örn: 1 * 20 = 20px)
+                    double snappedDeltaX = stepsX * snapSize;
+                    double snappedDeltaY = stepsY * snapSize;
+
+                    // Seçili orduyu hizalı bir şekilde kaydır!
+                    foreach (var item in appState.SelectedItems)
+                    {
+                        item.X += snappedDeltaX;
+                        item.Y += snappedDeltaY;
+                    }
+
+                    // 4. ÇOK KRİTİK: Farenin "Eski Konumunu" farenin ŞU ANKİ yeri yapmıyoruz!
+                    // Sadece kullandığımız o 20px'lik kısmı ekliyoruz. 
+                    // Böylece artan o 15 piksellik "küsurat" kaybolmuyor, bir sonraki harekette birikmeye devam ediyor!
+                    lastMouseX += snappedDeltaX;
+                    lastMouseY += snappedDeltaY;
+                }
+            }
             ScreenX = e.ClientX;
             ScreenY = e.ClientY;
         }
@@ -157,8 +197,9 @@ namespace CanvasRoomDesign.Components.Pages
         {
             isDraggingToolBox = false;
 
-            isSelecting = false;
+            isSelectingArea = false;
 
+            isDraggingDesignItem = false;
             
         }
 
@@ -168,32 +209,60 @@ namespace CanvasRoomDesign.Components.Pages
         private void OnCanvasMouseDown(MouseEventArgs e)
         {
             
-            isSelecting = true;
+            isSelectingArea = true;
             startX = e.ClientX;
             startY = e.ClientY;
             currentX = startX;
             currentY = startY;
-            appState.ClearSelection();
+            //appState.ClearSelection();
         }
 
 
         private void DesignItemClick(MouseEventArgs e, DesignItem item) 
         {
-            if (!isSelecting)
+            /*
+            if (e.CtrlKey)
+            {
+                if (item.IsSelected)
+                {
+                    appState.DeSelectItem(item, notify: true);
+                }
+                else
+                {
+                    appState.SelectItem(item, notify: true);
+                }
+            }
+            else
             {
                 appState.ClearSelection();
                 appState.SelectItem(item, notify: true);
             }
+            */
+
         }
 
-        private void DesignItemMouseDown(MouseEventArgs e)
+        private void DesignItemMouseDown(MouseEventArgs e, DesignItem item)
         {
+            if (!item.IsSelected)
+            {
+                // CTRL'ye BASILMIYORSA ESKİLERİ TEMİZLE
+                if (!e.CtrlKey)
+                {
+                    appState.ClearSelection();
+                }
+                // VE BU KOLTUĞU SEÇ!
+                appState.SelectItem(item, notify: true);
+            }
+
             if (e.Button == 0) isDraggingDesignItem = true;
+            lastMouseX = e.ClientX;
+            lastMouseY = e.ClientY;
+            
         }
 
         private void DesignItemMouseUp(MouseEventArgs e)
         {
-            isDraggingDesignItem = false;
+            //isDraggingDesignItem = false;
         }
 
 
