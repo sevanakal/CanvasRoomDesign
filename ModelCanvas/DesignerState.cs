@@ -41,6 +41,12 @@
 
         }
 
+        public void RemoveItem(DesignItem item, bool notify = true)
+        {
+            Items.Remove(item);
+            if (notify) NotifyStateChanged();
+        }
+
         public DesignItem? GetLastItem() => Items.LastOrDefault();
         
     }

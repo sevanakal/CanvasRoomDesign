@@ -1,9 +1,10 @@
 ﻿@page "/roomdesigner"
 @rendermode InteractiveServer
-<div class="app-container" @onmousemove="OnMouseMoveCanvas" @onmouseup="OnMouseUpCanvas">
+<div class="app-container" @onmousemove="OnMouseMoveCanvas" @onmouseup="OnMouseUpCanvas" @onkeydown="CanvasAreaKeyboardDownListener" tabindex="0">
     <div class="status-bar">
         ToolboxX: @ScreenX ToolBoxY: @ScreenY // StartX: @startX StartY: @startY || Secili Liste: @appState.SelectedItems.Count()
         || Nesnenin Basili durumu: @isDraggingDesignItem.ToString() || DesignItemX: @CurrentDesignItemX DesignItenY: @CurrentDesignItemY
+        || Pressed Key Down: @KeyDownListener
     </div>
     
         <div class="toolbox" style="left: @(ToolBoxX)px; top: @(ToolBoxY)px">

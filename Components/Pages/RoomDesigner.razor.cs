@@ -28,7 +28,12 @@ namespace CanvasRoomDesign.Components.Pages
 
         private bool hasDraggedItem = false;
 
+        private string KeyDownListener = "";
+
         private DesignerState appState = new DesignerState();
+
+        private List<DesignItem> ClipboardDesignItems = new List<DesignItem>();
+        private List<DesignItem> RemoveItems = new List<DesignItem>();
 
         //Seçim alanı için kullanılacak değişkenler
         private bool isSelectingArea = false;
@@ -287,6 +292,57 @@ namespace CanvasRoomDesign.Components.Pages
             // İşlem bitti, ajanları uyut
             isDraggingDesignItem = false;
             hasDraggedItem = false;
+        }
+
+        private void CanvasAreaKeyboardDownListener(KeyboardEventArgs e) 
+        {
+            KeyDownListener = e.Key;
+            if(e.CtrlKey && e.Key.ToLower() == "c")
+            {
+                ClipboardDesignItems.Clear();
+                foreach (var item in appState.SelectedItems) 
+                {
+                    var newItem = item.Clone();
+                    ClipboardDesignItems.Add(newItem);
+                }
+            }
+            if(e.CtrlKey && e.Key.ToLower() == "v")
+            {
+                if (ClipboardDesignItems.Count() > 0)
+                {
+                    appState.ClearSelection();
+                    foreach (var item in ClipboardDesignItems)
+                    {
+                        var newItem = item.Clone();
+                        newItem.Name = PrefixName + "-" + PrefixNumber;
+                        newItem.Y += 80;
+                        PrefixNumber++;
+                        appState.AddItem(newItem);
+                        appState.SelectItem(newItem, notify: false  );
+                    }
+                    foreach (var item in ClipboardDesignItems)
+                    {
+                        item.Y += 80;
+                    }
+                } 
+            }
+            if (e.Key.ToLower() == "delete")
+            {
+                if (appState.SelectedItems.Any())
+                {
+                    foreach (var item in appState.SelectedItems)
+                    {
+                        RemoveItems.Add(item);
+                    }
+                    appState.ClearSelection();
+                    foreach(var item in RemoveItems)
+                    {
+                        appState.RemoveItem(item, notify:false );
+                    }
+                    RemoveItems = new List<DesignItem>();
+                }
+                
+            }
         }
 
 
