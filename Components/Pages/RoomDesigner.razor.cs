@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
 using CanvasRoomDesign.ModelCanvas;
 using Microsoft.AspNetCore.Components;
+using System.Diagnostics.Eventing.Reader;
 
 namespace CanvasRoomDesign.Components.Pages
 {
@@ -24,6 +25,8 @@ namespace CanvasRoomDesign.Components.Pages
 
         public string PrefixName = "A";
         public int PrefixNumber = 1;
+
+        private bool hasDraggedItem = false;
 
         private DesignerState appState = new DesignerState();
 
@@ -171,6 +174,8 @@ namespace CanvasRoomDesign.Components.Pages
                 // Eğer X veya Y ekseninde en az 1 tam adım (20px) atıldıysa harekete geç!
                 if (stepsX != 0 || stepsY != 0)
                 {
+                    hasDraggedItem = true;
+
                     // Atılan tam adımı tekrar 20 ile çarpıp gerçek uygulanacak pikseli bul (Örn: 1 * 20 = 20px)
                     double snappedDeltaX = stepsX * snapSize;
                     double snappedDeltaY = stepsY * snapSize;
@@ -200,6 +205,7 @@ namespace CanvasRoomDesign.Components.Pages
             isSelectingArea = false;
 
             isDraggingDesignItem = false;
+
             
         }
 
@@ -214,12 +220,13 @@ namespace CanvasRoomDesign.Components.Pages
             startY = e.ClientY;
             currentX = startX;
             currentY = startY;
-            //appState.ClearSelection();
+            appState.ClearSelection();
         }
 
 
         private void DesignItemClick(MouseEventArgs e, DesignItem item) 
         {
+            
             /*
             if (e.CtrlKey)
             {
@@ -243,26 +250,43 @@ namespace CanvasRoomDesign.Components.Pages
 
         private void DesignItemMouseDown(MouseEventArgs e, DesignItem item)
         {
+            hasDraggedItem = false;
+
+            // 2. KURAL: Eğer tıklanan koltuk ZATEN SEÇİLİ DEĞİLSE...
             if (!item.IsSelected)
             {
-                // CTRL'ye BASILMIYORSA ESKİLERİ TEMİZLE
+                // CTRL'ye basılmıyorsa eski seçimi temizle
                 if (!e.CtrlKey)
                 {
                     appState.ClearSelection();
                 }
-                // VE BU KOLTUĞU SEÇ!
+                // Ve sadece bu koltuğu seç
                 appState.SelectItem(item, notify: true);
             }
+            // DİKKAT: Eğer koltuk zaten seçiliyse hiçbir if() bloğuna girmez, seçimi KORUR!
 
+            // 3. Sürükleme motorunu hazırla
             if (e.Button == 0) isDraggingDesignItem = true;
             lastMouseX = e.ClientX;
             lastMouseY = e.ClientY;
-            
+
         }
 
-        private void DesignItemMouseUp(MouseEventArgs e)
+
+        private void DesignItemMouseUp(MouseEventArgs e, DesignItem item)
         {
             //isDraggingDesignItem = false;
+            // KURAL 3: Eğer fareyi bıraktık ama HİÇ SÜRÜKLEMEDİYSEK ve CTRL'ye basmıyorsak...
+            // Demek ki kullanıcı sadece bu koltuğu "Tekli Seçmek" istedi!
+            if (!hasDraggedItem && !e.CtrlKey)
+            {
+                appState.ClearSelection();
+                appState.SelectItem(item, notify: true);
+            }
+
+            // İşlem bitti, ajanları uyut
+            isDraggingDesignItem = false;
+            hasDraggedItem = false;
         }
 
 
