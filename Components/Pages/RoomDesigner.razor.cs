@@ -11,9 +11,10 @@ namespace CanvasRoomDesign.Components.Pages
         /*Parameters*/
 
         
-        private double ToolBoxX = 20, ToolBoxY = 20; //Toolbox ekrandaki x,y koordinatları
+        private double ToolBoxX = 200, ToolBoxY = 200; //Toolbox ekrandaki x,y koordinatları
         private bool isDraggingToolBox = false; //Toolbox seçili olup olmadığının kontrolu
         private double ToolBoxDragOffsetX = 0, ToolBoxDragOffsetY = 0; //Fare ile nesne seçildiğinde x,y koordinatlarının tutulması
+        
 
         private double CurrentDesignItemX = 0, CurrentDesignItemY = 0;
 
@@ -140,6 +141,7 @@ namespace CanvasRoomDesign.Components.Pages
                 ToolBoxX = e.ClientX - ToolBoxDragOffsetX;
                 ToolBoxY = e.ClientY - ToolBoxDragOffsetY;
             }
+
             
             if (isSelectingArea)
             {
@@ -210,7 +212,6 @@ namespace CanvasRoomDesign.Components.Pages
             isSelectingArea = false;
 
             isDraggingDesignItem = false;
-
             
         }
 
