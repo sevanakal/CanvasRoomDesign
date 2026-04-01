@@ -7,7 +7,7 @@
         || Pressed Key Down: @KeyDownListener
     </div>
 
-    <div class="toolbox" style="left: @(ToolBoxX)px; top: @(ToolBoxY)px">
+    <div class="toolbox" style="left: @(ToolBoxX)px; top: @(ToolBoxY)px" @onmousedown:stopPropagation="true" @onkeydown:stopPropagation="true">
         <header class="header no-select" @onmousedown="OnToolBoxMouseDown" @onmouseup="OnToolBoxMouseUp">Toolbox</header>
         <div class="content">
             <ul class="tool-list">
@@ -59,11 +59,11 @@
             <ul class="parameters-list">
                 <li>
                     <label class="parameters-label">Prefix</label><br />
-                    <input type="text" class="parameters-input" maxlength="3" @bind="PrefixName" />
+                    <input type="text" class="parameters-input" maxlength="3" @bind="PrefixName" @bind:event="oninput" />
                 </li>
                 <li>
                     <label class="parameters-label">Number</label><br />
-                    <input type="number" class="parameters-input" @bind="PrefixNumber" min="1" max="999" oninput="if(this.value.length > 3) this.value = this.value.slice(0, 3);" />
+                    <input type="text" pattern="[0-9]*" maxlength="3" class="parameters-input" @bind="PrefixNumber" @bind:event="oninput" />
                 </li>
             </ul>
 
@@ -77,7 +77,7 @@
     {
         var left = appState.SelectedItems.FirstOrDefault().X;
         var top = appState.SelectedItems.FirstOrDefault().Y;
-        <div class="proparties" style="left: @(left + 50)px; top: @(top + 50)px;">
+        <div class="proparties" style="left: @(left + 50)px; top: @(top + 50)px;" @onmousedown:stopPropagation="true" @onkeydown:stopPropagation="true">
             <div class="header">Proarties</div>
             <div class="content">
                 <ul>
@@ -88,7 +88,47 @@
             </div>
         </div>
     }
-    
+
+    @if (appState.SelectedItems.Count() > 1)
+    {
+        var left = appState.SelectedItems.LastOrDefault().X;
+        var top = appState.SelectedItems.LastOrDefault().Y;
+        <div class="grouparea" style="left: @(left+50)px; top: @(top+50)px;" @onmousedown:stopPropagation="true" @onkeydown:stopPropagation="true">
+            <div class="header">Add Group</div>
+            <ul>
+                <li>
+                    <span>Group Name</span><input type="text" maxlength="10" @bind="CreatadGroup.Name" @bind:event="oninput"/>
+                </li>
+                <li>
+                    <span>Group Color</span>
+                    <div class="custom-combobox">
+
+                        <div class="combobox-trigger" @onclick="() => isGroupColorPickerOpen = !isGroupColorPickerOpen" style="background-color: @CreatadGroup.Color">
+                            
+                        </div>
+
+                        @if (isGroupColorPickerOpen)
+                        {
+                            <div class="combobox-dropdown">
+                                @foreach (var color in groupColors)
+                                {
+                                    <div class="color-item"
+                                         style="background-color: @color;"
+                                         title="@color"
+                                         @onclick="() => SelectGroupColor(color)">
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </li>
+                <li>
+                    <button class="group-btn" @onclick="CreateGroupButtonClick" @onclick:stopPropagation="true">Create Group</button>
+                </li>
+            </ul>
+        </div>    
+    }
+
     
 
     <div class="canvas-area" @onmousedown="OnCanvasMouseDown">
@@ -99,6 +139,11 @@
                  @onclick="e => DesignItemClick(e, item)" @onmousedown="e => DesignItemMouseDown(e, item)" @onmouseup="e => DesignItemMouseUp(e, item)" @onmousedown:stopPropagation="true">
                 @GetItemIcon(item.Type)
                 <span>@item.Name</span>
+                @if (item.IsAddedToGroup)
+                {
+                    <div class="group-border" style="background-color: @(item.GroupColor)"></div>
+                }
+                
             </div>
         }
     </div>

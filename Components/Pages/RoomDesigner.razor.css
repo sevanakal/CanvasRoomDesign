@@ -72,6 +72,16 @@
     cursor:grabbing;
 }
 
+.design-item .group-border {
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    background-color: red;
+    bottom: 0;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
 .toolbox {
     position: absolute;
     z-index: 1100;
@@ -79,6 +89,7 @@
     border-radius: 8px; /* Köşeleri hafifçe yumuşat (Modern hissiyat) */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Havada süzülmesini sağlayan o sihirli gölge! */
     background-color: rgb(24, 205, 221, 0.20); /* İçerisi beyaz kalsın ki gölge dışarı vursun */
+    user-select:none;
     
     
 }
@@ -234,6 +245,7 @@ input[type="number"] {
     left:150px;
     top:150px;
     width:100px;
+    user-select:none;
 }
 
 .proparties .header {
@@ -283,4 +295,135 @@ input[type="number"] {
     font-size:10px;
     font-weight:600;
     text-align:center;
+}
+
+.grouparea {
+    position: absolute;
+    z-index: 1100;
+    border: 1px solid #d1d5db; /* Çok zarif, açık gri bir çerçeve */
+    border-radius: 8px; /* Köşeleri hafifçe yumuşat (Modern hissiyat) */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Havada süzülmesini sağlayan o sihirli gölge! */
+    background-color: rgb(24, 205, 221, 0.90); /* İçerisi beyaz kalsın ki gölge dışarı vursun */
+    left: 150px;
+    top: 150px;
+    width: 190px;
+    user-select:none;
+}
+
+.grouparea .header {
+    display: block;
+    background-color: rgb(24, 205, 221);
+    font-size: 13px;
+    font-weight: 600;
+    color: #FFFFFF;
+    text-shadow: 0 1px 2px rgb(14, 125, 135);
+    padding: 4px 12px;
+    cursor: grab;
+    border-bottom: 2px solid #000000;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.grouparea .header:active {
+    cursor: grabbing;
+    background-color: rgb(13, 127, 137);
+}
+
+.grouparea ul {
+    display: block;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin: 10px 5px 10px 5px;
+}
+
+.grouparea ul li {
+    margin-bottom: 4px;
+}
+
+
+.grouparea ul li span {
+    display: inline-block;
+    width: 80px;
+    font-weight: 600;
+    font-size: 11px;
+}
+
+.grouparea ul li input {
+    width: 85px;
+    display: inline-block;
+    border-radius: 8px;
+    border: 1px solid rgb(14, 125, 135);
+    font-size: 10px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Özel Combobox Ana Taşıyıcısı */
+.grouparea .custom-combobox {
+    display: inline-block;
+    width: 88px; /* Senin input ile aynı genişlik */
+    position: relative;
+    vertical-align: middle;
+}
+
+/* Tıklanan Başlık Kısmı (Tetikleyici) */
+.grouparea .combobox-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 8px; /* Senin modern radius ayarın */
+    border: 1px solid rgb(14, 125, 135);
+    background-color: white;
+    padding: 2px 5px;
+    cursor: pointer;
+    font-weight: 600;
+    height: 13px;
+}
+
+/* Başlığın içindeki minik renk topu */
+.grouparea .trigger-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid #d1d5db;
+}
+
+/* Aşağıya açılan, 20 rengin olduğu havada duran palet! */
+.grouparea .combobox-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0; /* Menüyü sağa yasla ki dışarı taşmasın */
+    width: 125px; /* 5 sütun x 4 satır renk sığacak şekilde tasarlandı */
+    background-color: white;
+    border: 1px solid rgb(14, 125, 135);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-wrap: wrap;
+    padding: 6px;
+    gap: 6px; /* Renkler arası mesafe */
+    z-index: 1200;
+    margin-top: 4px;
+}
+
+/* Paletin içindeki her bir renk kutucuğu */
+.grouparea .color-item {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.1);
+    transition: transform 0.1s ease-in-out;
+}
+
+/* Üzerine gelince hafifçe büyüme efekti (UX kalitesi!) */
+.grouparea .color-item:hover {
+    transform: scale(1.2);
+    border-color: black;
+}
+
+.grouparea .group-btn {
+    width: 100%;
+    
 }

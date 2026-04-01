@@ -16,6 +16,8 @@
         public bool IsSelected { get; set; }
 
         public bool IsSellable { get; set; } = false;
+
+        public bool IsAddedToGroup { get; set; } = false;
         public Guid? GroupId { get; set; }
         public string GroupColor { get; set; } = "";
         public string GroupName { get; set; } = "";
@@ -35,6 +37,7 @@
                 Color = this.Color,
                 IsSelected = false,
                 IsSellable = this.IsSellable,
+                IsAddedToGroup = this.IsAddedToGroup,
                 GroupId = this.GroupId,
                 GroupColor = this.GroupColor,
                 GroupName = this.GroupName

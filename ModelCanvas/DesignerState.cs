@@ -47,6 +47,17 @@
             if (notify) NotifyStateChanged();
         }
 
+        public void AddItemToGroup(GroupItem group)
+        {
+            foreach (var item in SelectedItems)
+            {
+                item.IsAddedToGroup = true;
+                item.GroupId = group.Id;
+                item.GroupName = group.Name;
+                item.GroupColor = group.Color;
+            }
+        }
+
         public DesignItem? GetLastItem() => Items.LastOrDefault();
         
     }

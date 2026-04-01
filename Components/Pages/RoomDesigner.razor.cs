@@ -62,7 +62,7 @@ namespace CanvasRoomDesign.Components.Pages
             };
             DesignItem newItem = new DesignItem
             {
-                Name = PrefixName + "-" + PrefixNumber,
+                Name = PrefixName.ToUpper() + "-" + PrefixNumber,
                 Type = itemType,
                 X = appState.GetLastItem()?.X + 80 ?? 200,
                 Y = 200,
@@ -315,7 +315,7 @@ namespace CanvasRoomDesign.Components.Pages
                     foreach (var item in ClipboardDesignItems)
                     {
                         var newItem = item.Clone();
-                        newItem.Name = PrefixName + "-" + PrefixNumber;
+                        newItem.Name = PrefixName.ToUpper() + "-" + PrefixNumber;
                         newItem.Y += 80;
                         PrefixNumber++;
                         appState.AddItem(newItem);
@@ -346,6 +346,37 @@ namespace CanvasRoomDesign.Components.Pages
             }
         }
 
+
+        //Groupda Renk Paleti Seçimi
+        // Renk paletinin açık/kapalı durumu
+        private bool isGroupColorPickerOpen = false;
+
+        // Seçilen rengi tutacak değişken (Varsayılan olarak ilk renk)
+        private GroupItem CreatadGroup = new GroupItem { Color = "#EF4444" };
+
+        // 20 Adet Modern UI Rengi (Tailwind CSS referanslı, göz yormayan tonlar)
+        private string[] groupColors = new string[]
+        {
+            "#EF4444", "#F97316", "#F59E0B", "#EAB308", "#84CC16",
+            "#22C55E", "#10B981", "#14B8A6", "#06B6D4", "#0EA5E9",
+            "#3B82F6", "#6366F1", "#8B5CF6", "#A855F7", "#D946EF",
+            "#EC4899", "#F43F5E", "#64748B", "#71717A", "#18181B"
+        };
+
+        // Renk seçildiğinde çalışacak metot
+        private void SelectGroupColor(string color)
+        {
+            CreatadGroup.Color = color;
+            isGroupColorPickerOpen = false; // Seçim yapılınca paneli kapat
+        }
+
+        private void CreateGroupButtonClick()
+        {
+            appState.AddItemToGroup(CreatadGroup);
+            appState.ClearSelection();
+            appState.NotifyStateChanged();
+            CreatadGroup = new GroupItem();
+        }
 
     }
 }
