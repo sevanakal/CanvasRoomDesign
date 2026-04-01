@@ -2,6 +2,7 @@
 using CanvasRoomDesign.ModelCanvas;
 using Microsoft.AspNetCore.Components;
 using System.Diagnostics.Eventing.Reader;
+using System.Transactions;
 
 namespace CanvasRoomDesign.Components.Pages
 {
@@ -60,12 +61,17 @@ namespace CanvasRoomDesign.Components.Pages
                 DesignItemType.stage => (200, 150, "#000000", false),
                 _ => (40, 40, "#333333", false)
             };
+            double defaultYPosition = 200;
+            if (appState.Items.Any())
+            {
+                defaultYPosition = appState.GetLastItem()?.Y ?? 200;
+            }
             DesignItem newItem = new DesignItem
             {
                 Name = PrefixName.ToUpper() + "-" + PrefixNumber,
                 Type = itemType,
                 X = appState.GetLastItem()?.X + 80 ?? 200,
-                Y = 200,
+                Y = defaultYPosition,
                 Width = width,
                 Height = height,
                 Color = color,
