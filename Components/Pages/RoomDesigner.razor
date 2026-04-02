@@ -129,6 +129,17 @@
         </div>    
     }
 
+    <div class="group-list">
+        <div class="header">Group List</div>
+        <ul>
+            @foreach (var item in appState.Groups)
+            {
+                <li style="background-color: @(item.Color)">
+                    @item.Name @appState.Items.Where(i => i.GroupId==item.Id).Count()
+                </li>
+            }
+        </ul>
+    </div>
     
 
     <div class="canvas-area" @onmousedown="OnCanvasMouseDown">

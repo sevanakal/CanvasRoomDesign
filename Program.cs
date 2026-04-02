@@ -1,8 +1,14 @@
 using CanvasRoomDesign.Components;
+using CurrieTechnologies.Razor.SweetAlert2;
+using CanvasRoomDesign.UIServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddSweetAlert2();
+builder.Services.AddScoped<IClientUIService, ClientUIService>();
+
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 

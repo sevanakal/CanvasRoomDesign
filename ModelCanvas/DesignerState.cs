@@ -9,6 +9,8 @@
         //Sadece seçili olan nesneler
         public IEnumerable<DesignItem> SelectedItems => Items.Where(i => i.IsSelected);
 
+        public List<GroupItem> Groups { get; set; } = new List<GroupItem>();
+
         //Kopyalanan nesnelerin hafızaya alınması
         private List<DesignItem> Clipboard { get; set; } = new List<DesignItem>();
 
@@ -49,15 +51,55 @@
 
         public void AddItemToGroup(GroupItem group)
         {
-            foreach (var item in SelectedItems)
+            if (!HasGroup(group.Name))
             {
-                item.IsAddedToGroup = true;
-                item.GroupId = group.Id;
-                item.GroupName = group.Name;
-                item.GroupColor = group.Color;
+                Groups.Add(group);
+                foreach (var item in SelectedItems)
+                {
+                    item.IsAddedToGroup = true;
+                    item.GroupId = group.Id;
+                    item.GroupName = group.Name;
+                    item.GroupColor = group.Color;
+
+                }
             }
+            else
+            {
+                var groupItem = Groups.Where(g => g.Name == group.Name).FirstOrDefault();
+                if (groupItem != null)
+                {
+                    foreach (var item in SelectedItems)
+                    {
+                        item.IsAddedToGroup = true;
+                        item.GroupId = groupItem.Id;
+                        item.GroupName = group.Name;
+                        item.GroupColor = groupItem.Color;
+
+                    }
+                }
+            }
+
+
+            CheckBlankGroup(group.Name);
         }
 
+        private bool HasGroup(string groupname)
+        {
+            var group = Groups.FirstOrDefault(g => g.Name == groupname);
+            if (group != null) { return true; } else { return false; }
+        }
+
+        private void CheckBlankGroup(string groupname)
+        {
+            foreach (var item in Groups)
+            {
+                if (Items.Where(i => i.GroupId == item.Id).Count() == 0)
+                {
+                    Groups.Remove(item);
+                }
+            }   
+        }
+        
         public DesignItem? GetLastItem() => Items.LastOrDefault();
         
     }

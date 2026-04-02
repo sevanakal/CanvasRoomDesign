@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
 using CanvasRoomDesign.ModelCanvas;
+using CanvasRoomDesign.UIServices;
 using Microsoft.AspNetCore.Components;
 using System.Diagnostics.Eventing.Reader;
 using System.Transactions;
@@ -8,10 +9,12 @@ namespace CanvasRoomDesign.Components.Pages
 {
     public partial class RoomDesigner
     {
+        [Inject] public IClientUIService _ClientUIService { get; set; }
+
 
         /*Parameters*/
 
-        
+
         private double ToolBoxX = 200, ToolBoxY = 200; //Toolbox ekrandaki x,y koordinatları
         private bool isDraggingToolBox = false; //Toolbox seçili olup olmadığının kontrolu
         private double ToolBoxDragOffsetX = 0, ToolBoxDragOffsetY = 0; //Fare ile nesne seçildiğinde x,y koordinatlarının tutulması
@@ -376,12 +379,22 @@ namespace CanvasRoomDesign.Components.Pages
             isGroupColorPickerOpen = false; // Seçim yapılınca paneli kapat
         }
 
-        private void CreateGroupButtonClick()
+        async Task CreateGroupButtonClick()
         {
-            appState.AddItemToGroup(CreatadGroup);
-            appState.ClearSelection();
-            appState.NotifyStateChanged();
-            CreatadGroup = new GroupItem();
+            if (appState.SelectedItems.Count() == 0) return;
+            if (String.IsNullOrEmpty(CreatadGroup.Name.Trim()))
+            {
+                await _ClientUIService.ShowError("Lütfen grup adı giriniz.");
+            }
+            else
+            {
+                appState.AddItemToGroup(CreatadGroup);
+                appState.ClearSelection();
+                appState.NotifyStateChanged();
+                CreatadGroup = new GroupItem();
+                await _ClientUIService.ShowSuccess("Grup başarıyla oluşturuldu.");
+            }
+                
         }
 
     }
