@@ -69,11 +69,22 @@ namespace CanvasRoomDesign.Components.Pages
             {
                 defaultYPosition = appState.GetLastItem()?.Y ?? 200;
             }
+
+            double xPosition = 0;
+            if (isDirectionToRight)
+            {
+                xPosition = appState.GetLastItem()?.X + 80 ?? 200;
+            }
+            else
+            {
+                xPosition = appState.GetLastItem()?.X - 80 ?? 200;
+            }
+
             DesignItem newItem = new DesignItem
             {
                 Name = PrefixName.ToUpper() + "-" + PrefixNumber,
                 Type = itemType,
-                X = appState.GetLastItem()?.X + 80 ?? 200,
+                X = xPosition,
                 Y = defaultYPosition,
                 Width = width,
                 Height = height,
@@ -151,6 +162,12 @@ namespace CanvasRoomDesign.Components.Pages
                 ToolBoxY = e.ClientY - ToolBoxDragOffsetY;
             }
 
+            if (isDragGroupList)
+            {
+                GroupListX = e.ClientX - GroupListDragOffsetX;
+                GroupListY = e.ClientY - GroupListDragOffsetY;
+            }
+
             
             if (isSelectingArea)
             {
@@ -221,7 +238,9 @@ namespace CanvasRoomDesign.Components.Pages
             isSelectingArea = false;
 
             isDraggingDesignItem = false;
-            
+
+            isDragGroupList = false;
+
         }
 
 
@@ -395,6 +414,25 @@ namespace CanvasRoomDesign.Components.Pages
                 await _ClientUIService.ShowSuccess("Grup başarıyla oluşturuldu.");
             }
                 
+        }
+
+        private bool isDragGroupList = false;
+        private double GroupListX = 50, GroupListY = 400;
+        private double GroupListDragOffsetX = 0, GroupListDragOffsetY = 0;
+        private void OnGroupListMouseDown(MouseEventArgs e)
+        {
+            isDragGroupList = true;
+            GroupListDragOffsetX = e.ClientX - GroupListX;
+            GroupListDragOffsetY = e.ClientY - GroupListY;
+        }
+
+        // Varsayılan yön: Sağ (To Right)
+        private bool isDirectionToRight = true;
+
+        // Tıklandığında yönü tersine çevirecek
+        private void ToggleDirection()
+        {
+            isDirectionToRight = !isDirectionToRight;
         }
 
     }

@@ -4,7 +4,7 @@
     <div class="status-bar">
         ToolboxX: @ScreenX ToolBoxY: @ScreenY // StartX: @startX StartY: @startY || Secili Liste: @appState.SelectedItems.Count()
         || Nesnenin Basili durumu: @isDraggingDesignItem.ToString() || DesignItemX: @CurrentDesignItemX DesignItenY: @CurrentDesignItemY
-        || Pressed Key Down: @KeyDownListener
+        || Pressed Key Down: @KeyDownListener || GroupListDrag: @isDragGroupList.ToString()
     </div>
 
     <div class="toolbox" style="left: @(ToolBoxX)px; top: @(ToolBoxY)px" @onmousedown:stopPropagation="true" @onkeydown:stopPropagation="true">
@@ -64,6 +64,27 @@
                 <li>
                     <label class="parameters-label">Number</label><br />
                     <input type="text" pattern="[0-9]*" maxlength="3" class="parameters-input" @bind="PrefixNumber" @bind:event="oninput" />
+                </li>
+                <li>
+                    <label class="parameters-label">Direction</label><br />
+
+                    <div class="direction-toggle @(isDirectionToRight ? "right" : "left")" @onclick="ToggleDirection">
+
+                        <div class="toggle-slider"></div>
+
+                        <span class="toggle-icon icon-left">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M15 18l-6-6 6-6" />
+                            </svg>
+                        </span>
+
+                        <span class="toggle-icon icon-right">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 18l6-6-6-6" />
+                            </svg>
+                        </span>
+
+                    </div>
                 </li>
             </ul>
 
@@ -129,17 +150,21 @@
         </div>    
     }
 
-    <div class="group-list">
-        <div class="header">Group List</div>
-        <ul>
-            @foreach (var item in appState.Groups)
-            {
-                <li style="background-color: @(item.Color)">
-                    @item.Name @appState.Items.Where(i => i.GroupId==item.Id).Count()
-                </li>
-            }
-        </ul>
-    </div>
+    @if (appState.Groups.Count() > 0)
+    {
+        <div class="group-list" @onmousedown:stopPropagation="true" style="left: @(GroupListX)px; top: @(GroupListY)px;">
+            <div class="header" @onmousedown="OnGroupListMouseDown">Group List</div>
+            <ul>
+                @foreach (var item in appState.Groups)
+                {
+                    <li style="background-color: @(item.Color)">
+                        @item.Name <span class="group-list-counter" style="color: @(item.Color)">@appState.Items.Where(i => i.GroupId == item.Id).Count()</span>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    
     
 
     <div class="canvas-area" @onmousedown="OnCanvasMouseDown">

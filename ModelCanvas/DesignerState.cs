@@ -91,13 +91,26 @@
 
         private void CheckBlankGroup(string groupname)
         {
+            List<Guid> tempGroup= new List<Guid>();
             foreach (var item in Groups)
             {
                 if (Items.Where(i => i.GroupId == item.Id).Count() == 0)
                 {
-                    Groups.Remove(item);
+                    tempGroup.Add(item.Id);
                 }
-            }   
+            }
+            if (tempGroup.Any())
+            {
+                foreach (var groupId in tempGroup)
+                {
+                    var group = Groups.FirstOrDefault(g => g.Id == groupId);
+                    if (group != null)
+                    {
+                        Groups.Remove(group);
+                    }
+                }
+                tempGroup = new List<Guid>();
+            }
         }
         
         public DesignItem? GetLastItem() => Items.LastOrDefault();
