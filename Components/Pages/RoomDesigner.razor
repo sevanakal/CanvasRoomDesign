@@ -53,6 +53,16 @@
                         </svg>
                     </button>
                 </li>
+                <li>
+                    <button class="tool-btn" data-tooltip="Kapı" @onclick="()=> AddNewItem(DesignItemType.door)">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 20h4"></path>
+                            <path d="M17 20h4"></path>
+                            <path d="M7 20V8"></path>
+                            <path d="M7 8a12 12 0 0 1 12 12" stroke-dasharray="2 2"></path>
+                        </svg>
+                    </button>
+                </li>
             </ul>
 
             <header class="header no-select">Parameters</header>
@@ -104,6 +114,19 @@
                 <ul>
                     <li>
                         <span>Prefix/Nr.</span><input type="text" maxlength="8" @bind="@appState.SelectedItems.FirstOrDefault().Name" @bind:event="oninput" />
+                    </li>
+                    <li>
+                        <span>Rotation</span>
+                        <button @onclick='() => ItemRotate(appState.SelectedItems.FirstOrDefault(), "left")'>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M15 18l-6-6 6-6" />
+                            </svg>
+                        </button>
+                        <button @onclick='() => ItemRotate(appState.SelectedItems.FirstOrDefault(), "right")'>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 18l6-6-6-6" />
+                            </svg>
+                        </button>
                     </li>
                 </ul>
             </div>
@@ -171,7 +194,7 @@
         @foreach (var item in appState.Items)
         {
             <div class="design-item @(item.IsSelected ? "selected" : "")"
-                 style="left: @(item.X)px; top: @(item.Y)px; width: @(item.Width)px; height: @(item.Height)px; background-color: @(item.Color)"
+                 style="left: @(item.X)px; top: @(item.Y)px; width: @(item.Width)px; height: @(item.Height)px; background-color: @(item.Color); transform: rotate(@(item.Rotation)deg);"
                  @onclick="e => DesignItemClick(e, item)" @onmousedown="e => DesignItemMouseDown(e, item)" @onmouseup="e => DesignItemMouseUp(e, item)" @onmousedown:stopPropagation="true">
                 @GetItemIcon(item.Type)
                 <span>@item.Name</span>

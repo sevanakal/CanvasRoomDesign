@@ -5,6 +5,7 @@
         armchair, //Koltuk
         chair, //Sandalye
         table, //Masa
-        stage //Sahne
+        stage, //Sahne
+        door // Kapı
     }
 }

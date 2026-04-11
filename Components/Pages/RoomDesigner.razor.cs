@@ -61,7 +61,8 @@ namespace CanvasRoomDesign.Components.Pages
                 DesignItemType.armchair => (60, 60, "#999999", true),
                 DesignItemType.chair => (60, 60, "#999999", true),
                 DesignItemType.table => (150, 75, "#000000", false),
-                DesignItemType.stage => (200, 150, "#000000", false),
+                DesignItemType.stage => (200, 75, "#000000", false),
+                DesignItemType.door => (40, 75, "", false),
                 _ => (40, 40, "#333333", false)
             };
             double defaultYPosition = 200;
@@ -134,6 +135,14 @@ namespace CanvasRoomDesign.Components.Pages
                                 <path d=""M18 16v-4""></path>
                                 <path d=""M4 12h16v-2H4z""></path>
                             </svg>
+            ",
+            DesignItemType.door=>(MarkupString)@"
+                <svg width=""40"" height=""150"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2"" stroke-linecap=""round"" stroke-linejoin=""round"">
+                    <path d=""M3 20h4""></path>
+                    <path d=""M17 20h4""></path>
+                    <path d=""M7 20V8""></path>
+                    <path d=""M7 8a12 12 0 0 1 12 12"" stroke-dasharray=""2 2""></path>
+                </svg>
             ",
             _ => (MarkupString)@"
                 <svg width=""24"" height=""24"" viewBox=""0 0 24 24"" fill=""none"" stroke=""currentColor"" stroke-width=""2"">
@@ -433,6 +442,32 @@ namespace CanvasRoomDesign.Components.Pages
         private void ToggleDirection()
         {
             isDirectionToRight = !isDirectionToRight;
+        }
+
+        private void ItemRotate(DesignItem item, string direction)
+        {
+            if (direction == "left")
+            {
+                if (item.Rotation == 0)
+                {
+                    item.Rotation = 345;
+                }
+                else
+                {
+                    item.Rotation = item.Rotation - 15;
+                }
+            }
+            else
+            {
+                if (item.Rotation == 345)
+                {
+                    item.Rotation = 0;
+                }
+                else
+                {
+                    item.Rotation = item.Rotation + 15;
+                }
+            }
         }
 
     }

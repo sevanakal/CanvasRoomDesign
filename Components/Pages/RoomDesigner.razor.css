@@ -268,8 +268,35 @@ input[type="number"] {
     background-color: rgb(24, 205, 221, 0.90); /* İçerisi beyaz kalsın ki gölge dışarı vursun */
     left:150px;
     top:150px;
-    width:100px;
+    width:160px;
     user-select:none;
+}
+
+.proparties button {
+    width: 15px; /* Tıklama alanı rahat olsun diye biraz büyüttüm */
+    height: 15px;
+    color: red; /* SVG içindeki currentColor bu kırmızıyı alacak */
+    display:inline-block;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc; /* İstersen border: none; yapıp tamamen şeffaf yapabilirsin */
+    border-radius: 4px; /* Hafif köşeleri oval olsun */
+    cursor: pointer; /* Üzerine gelince el işareti çıksın */
+    transition: all 0.2s ease;
+    padding:0;
+    margin:0;
+}
+
+/* Üzerine gelince rengi koyulaşsın (Güzel bir UX detayı) */
+.proparties button:hover {
+    color: darkred;
+    background-color: #f3f4f6;
+}
+
+/* İkonun boyutunu da içinden ayarlayalım */
+.proparties button svg {
+    width: 15px;
+    height: 15px;
 }
 
 .proparties .header {
@@ -301,12 +328,13 @@ input[type="number"] {
 
 .proparties ul li{
     margin-bottom:4px;
+    vertical-align:middle;
 }
 
 
 .proparties ul li span{ 
     display:inline-block;
-    width:60%;
+    width:50%;
     font-weight:600;
     font-size:11px;
 }
