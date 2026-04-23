@@ -1,4 +1,6 @@
-﻿using CanvasRoomDesign.Model;
+﻿using CanvasRoomDesign.DTOs;
+using CanvasRoomDesign.Mapper;
+using CanvasRoomDesign.Model;
 using CanvasRoomDesign.ModelGeneral;
 using Microsoft.EntityFrameworkCore;
 namespace CanvasRoomDesign.ModelServices
@@ -12,119 +14,149 @@ namespace CanvasRoomDesign.ModelServices
             _context = context;
         }
 
-        public async Task<StatusMessage> AddHall(Hall hall)
+        public async Task<StatusMessage<HallDto>> AddHall(HallDto hall)
         {
-            StatusMessage statusMessage = new StatusMessage();
-            try
-            {
-                _context.Halls.Add(hall);
-                await _context.SaveChangesAsync();
-                statusMessage.State = true;
-                statusMessage.Message = "Hall added successfully.";
-            }
-            catch (Exception ex)
+            StatusMessage<HallDto> statusMessage = new StatusMessage<HallDto>();
+            var existingHall = await _context.Halls.Where(h => h.Name == hall.Name).AnyAsync();
+            if (existingHall)
             {
                 statusMessage.State = false;
-                statusMessage.Message = $"System Error (HallService): {ex.Message}";
+                statusMessage.Message = "Hall name already exists.";
+                return statusMessage;
             }
+
+            _context.Halls.Add(hall.toHallEntity());
+            await _context.SaveChangesAsync();
+            statusMessage.Data = hall;
+            statusMessage.State = true;
+            statusMessage.Message = "Hall added successfully.";
+
             return statusMessage;
         }
 
-        public async Task<Hall> GetHallById(Guid id)
+        public async Task<StatusMessage<HallDto>> GetHallById(Guid id)
         {
             var hall = await _context.Halls.FindAsync(id);
+            StatusMessage<HallDto> statusMessage = new StatusMessage<HallDto>();
             if (hall != null)
             {
-                return hall;
+                statusMessage.Data = hall.ToHallDto();
+                statusMessage.State = true;
+                statusMessage.Message = "Hall found successfully.";
+                return statusMessage;
             }
             else
             {
-                return hall!;
+                statusMessage.Data = null;
+                statusMessage.State = false;
+                statusMessage.Message = "Hall not found.";
+                return statusMessage;
             }
         }
 
-        public async Task<List<Hall>> GetHallsWithSection()
+        public async Task<StatusMessage<List<HallDto>>> GetHallsWithSection()
         {
+            StatusMessage<List<HallDto>> statusMessage = new StatusMessage<List<HallDto>>();
+
             List<Hall> halls = await _context.Halls.Include(h => h.Sections).ToListAsync();
-            return halls;
+            List<HallDto> hallDtos = halls.Select(h => h.ToHallDto()).ToList();
+            statusMessage.Data = hallDtos;
+            statusMessage.State = true;
+            statusMessage.Message = "Halls with sections retrieved successfully.";
+
+            return statusMessage;
         }
 
-        public async Task<List<Hall>> GetHallWithAll()
+        public async Task<StatusMessage<List<HallDto>>> GetHallWithAll()
         {
+            StatusMessage<List<HallDto>> statusMessage = new StatusMessage<List<HallDto>>();
+
             List<Hall> halls = await _context.Halls
-        .Include(h => h.Sections)
-            .ThenInclude(s => s.Groups)
-                .ThenInclude(g => g.HallItems) // 1. Dal: Gruplu nesneler
-        .Include(h => h.Sections)
-            .ThenInclude(s => s.HallItems)     // 2. Dal: Grupsuz (serbest) nesneler
-        .ToListAsync();
-            return halls;
+    .Include(h => h.Sections)
+        .ThenInclude(s => s.Groups)
+            .ThenInclude(g => g.HallItems) // 1. Dal: Gruplu nesneler
+    .Include(h => h.Sections)
+        .ThenInclude(s => s.HallItems)     // 2. Dal: Grupsuz (serbest) nesneler
+    .ToListAsync();
+            List<HallDto> hallDtos = halls.Select(h => h.ToHallDto()).ToList();
+            statusMessage.Data = hallDtos;
+            statusMessage.State = true;
+            statusMessage.Message = "Halls with all details retrieved successfully.";
+
+
+
+            return statusMessage;
         }
 
         public async Task<StatusMessage> DeleteHall(Guid id)
         {
             var hall = await _context.Halls.Where(h => h.Id == id).FirstOrDefaultAsync();
             StatusMessage statusMessage = new StatusMessage();
-            try
+
+            if (hall != null)
             {
-                if (hall != null)
-                {
-                    _context.Halls.Remove(hall);
-                    await _context.SaveChangesAsync();
-                    statusMessage.State = true;
-                    statusMessage.Message = "Hall deleted successfully.";
-                }
-                else
-                {
-                    statusMessage.State = false;
-                    statusMessage.Message = "Hall not found.";
-                }
+                hall.IsDeleted = true;
+                _context.Halls.Update(hall);
+                await _context.SaveChangesAsync();
+                statusMessage.State = true;
+                statusMessage.Message = "Hall deleted successfully.";
             }
-            catch (Exception ex)
+            else
             {
                 statusMessage.State = false;
-                statusMessage.Message = $"Error deleting hall: {ex.Message}";
+                statusMessage.Message = "Hall not found.";
             }
+
             return statusMessage;
 
         }
 
-        public async Task<StatusMessage> UpdateHall(Hall hall)
+        public async Task<StatusMessage<HallDto>> UpdateHall(HallDto hall)
         {
-            StatusMessage statusMessage = new StatusMessage();
-            try
+            StatusMessage<HallDto> statusMessage = new StatusMessage<HallDto>();
+
+            if (String.IsNullOrEmpty(hall.Name.Trim()))
             {
-                if (String.IsNullOrEmpty(hall.Name.Trim()))
+                statusMessage.State = false;
+                statusMessage.Message = "Hall name cannot be empty.";
+                return statusMessage;
+            }
+            else
+            {
+                // 1. AnyAsync kullandık (Çok hızlı ve Asenkron)
+                // 2. h.Id != hall.Id diyerek kendi kendini bulmasını engelledik!
+                bool nameExists = await _context.Halls.AnyAsync(h => h.Name == hall.Name && h.Id != hall.Id);
+                if (nameExists)
                 {
                     statusMessage.State = false;
-                    statusMessage.Message = "Hall name cannot be empty.";
+                    statusMessage.Message = "Hall name already exists.";
+                    return statusMessage;
                 }
                 else
                 {
-                    // 1. AnyAsync kullandık (Çok hızlı ve Asenkron)
-                    // 2. h.Id != hall.Id diyerek kendi kendini bulmasını engelledik!
-                    bool nameExists = await _context.Halls.AnyAsync(h => h.Name == hall.Name && h.Id != hall.Id);
-                    if (nameExists)
+                    var existingHall = await _context.Halls.FindAsync(hall.Id);
+
+                    if (existingHall == null)
                     {
                         statusMessage.State = false;
-                        statusMessage.Message = "Hall name already exists.";
+                        statusMessage.Message = "Hall not found in database.";
+                        return statusMessage;
                     }
-                    else
-                    {
-                        _context.Halls.Update(hall);
-                        await _context.SaveChangesAsync();
-                        statusMessage.State = true;
-                        statusMessage.Message = "Hall updated successfully.";
+                    // 3. Güvenli Eşleştirme (Sadece değişmesine izin verdiğimiz alanları güncelliyoruz)
+                    existingHall.Name = hall.Name;
 
-                    }
+                    // EF Core 'existingHall' nesnesini zaten takip ettiği (Tracking) için 
+                    // _context.Halls.Update() YAZMIYORUZ! Direkt SaveChanges diyoruz.
+                    await _context.SaveChangesAsync();
+
+                    statusMessage.Data = hall;
+                    statusMessage.State = true;
+                    statusMessage.Message = "Hall updated successfully.";
+
                 }
-                
             }
-            catch (Exception ex)
-            {
-                statusMessage.State = false;
-                statusMessage.Message = $"Error updating (HallService): {ex.Message}";
-            }
+
+
             return statusMessage;
 
         }

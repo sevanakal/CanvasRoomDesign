@@ -1,14 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CanvasRoomDesign.ModelGeneral;
+using System.ComponentModel.DataAnnotations;
 
 namespace CanvasRoomDesign.Model
 {
-    public class Group
+    public class Group : ISoftDelete
     {
         [Key]
         public Guid Id { get; set; }
         public Guid SectionId { get; set; }
         public string Name { get; set; }
         public string Colour { get; set; }
+        public bool IsDeleted { get; set; } = false;
 
         public virtual Section Section { get; set; } = null!;
         public virtual ICollection<HallItem> HallItems { get; set; } = new List<HallItem>();

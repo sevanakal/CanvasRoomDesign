@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CanvasRoomDesign.ModelGeneral;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using System.Linq.Expressions;
 
 namespace CanvasRoomDesign.Model
 {
@@ -16,8 +18,20 @@ namespace CanvasRoomDesign.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
+            // Otomatik Filtreleme Mekanizması
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                // Eğer entity ISoftDelete interface'ini implemente ediyorsa
+                if (typeof(ISoftDelete).IsAssignableFrom(entityType.ClrType))
+                {
+                    modelBuilder.Entity(entityType.ClrType).HasQueryFilter(CreateIsDeletedFilter(entityType.ClrType));
+                }
+            }
+
             modelBuilder.Entity<Section>()
-                .HasOne(s => s.Hall)
+                .HasOne(s => s.hall)
                 .WithMany(h => h.Sections)
                 .HasForeignKey(s => s.HallId);
 
@@ -39,6 +53,15 @@ namespace CanvasRoomDesign.Model
                 .HasForeignKey(hi => hi.GroupId)
                 .OnDelete(DeleteBehavior.SetNull);
 
+        }
+
+        // Filtre oluşturucu yardımcı metod
+        private static LambdaExpression CreateIsDeletedFilter(Type type)
+        {
+            var parameter = Expression.Parameter(type, "it");
+            var prop = Expression.Property(parameter, nameof(ISoftDelete.IsDeleted));
+            var body = Expression.Equal(prop, Expression.Constant(false));
+            return Expression.Lambda(body, parameter);
         }
 
         public class CanvasDbcontextFactory : IDesignTimeDbContextFactory<CanvasDbcontext>

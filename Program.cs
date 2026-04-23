@@ -4,11 +4,13 @@ using CanvasRoomDesign.UIServices;
 using Microsoft.EntityFrameworkCore;
 using CanvasRoomDesign.Model;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using CanvasRoomDesign.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 builder.Services.AddSweetAlert2();
 builder.Services.AddScoped<IClientUIService, ClientUIService>();
 

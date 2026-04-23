@@ -3,6 +3,7 @@
     public class DesignItem
     {
         public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid SectionId { get; set; }
         public DesignItemType Type { get; set; }
 
         public string Name { get; set; } = "";
