@@ -17,12 +17,15 @@ builder.Services.AddScoped<IClientUIService, ClientUIService>();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<CanvasDbcontext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
 var app = builder.Build();
 
-var connectionString=builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddDbContext<CanvasDbcontext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
