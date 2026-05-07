@@ -63,7 +63,10 @@ namespace CanvasRoomDesign.ModelServices
         public async Task<StatusMessage<List<GroupDto>>> ListGroupBySectionId(Guid id)
         {
             StatusMessage<List<GroupDto>> statusMessage = new StatusMessage<List<GroupDto>>();
-            var groups = await _context.Groups.Where(g => g.SectionId == id).ToListAsync();
+            var groups = await _context.Groups
+        .Where(g => g.SectionId == id)
+        .Select(g => g.toGroupDto())
+        .ToListAsync();
             if (groups == null || groups.Count == 0)
             {
                 statusMessage.State = false;
@@ -74,7 +77,7 @@ namespace CanvasRoomDesign.ModelServices
             {
                 statusMessage.State = true;
                 statusMessage.Message = "Groups retrieved successfully.";
-                statusMessage.Data = groups.Select(g => g.toGroupDto()).ToList();
+                statusMessage.Data = groups;
             }
             return statusMessage;
         }
