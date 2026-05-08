@@ -20,16 +20,16 @@ namespace CanvasRoomDesign.ModelServices
             StatusMessage<GroupDto> statusMessage = new StatusMessage<GroupDto>();
 
             var isGroupExisting = await _context.Groups.AnyAsync(g => g.SectionId == groupDto.SectionId && g.Name == groupDto.Name.Trim());
-            
-            if (isGroupExisting) 
-            { 
+
+            if (isGroupExisting)
+            {
                 statusMessage.State = false;
                 statusMessage.Message = "Group with the same name already exists in this section.";
                 statusMessage.Data = null;
             }
             else
             {
-                Group groupEntity= groupDto.toGroupEntity();
+                Group groupEntity = groupDto.toGroupEntity();
                 _context.Groups.Add(groupEntity);
                 await _context.SaveChangesAsync();
                 statusMessage.State = true;
@@ -43,8 +43,8 @@ namespace CanvasRoomDesign.ModelServices
         public async Task<StatusMessage<GroupDto>> GetGroupById(Guid id)
         {
             StatusMessage<GroupDto> statusMessage = new StatusMessage<GroupDto>();
-            
-            var group= await _context.Groups.Where(g => g.Id == id).FirstOrDefaultAsync();
+
+            var group = await _context.Groups.Where(g => g.Id == id).FirstOrDefaultAsync();
             if (group == null)
             {
                 statusMessage.State = false;
@@ -112,5 +112,25 @@ namespace CanvasRoomDesign.ModelServices
             }
             return statusMessage;
         }
+
+        public async Task<StatusMessage> DeleteGroup(Guid id)
+        {
+            StatusMessage statusMessage = new StatusMessage();
+            var existingGroup = await _context.Groups.Where(g => g.Id == id).FirstOrDefaultAsync();
+            if (existingGroup == null)
+            {
+                statusMessage.State = false;
+                statusMessage.Message = "Group not found.";
+            }
+            else
+            {
+                existingGroup.IsDeleted = true;
+                await _context.SaveChangesAsync();
+                statusMessage.State = true;
+                statusMessage.Message = "Group deleted successfully.";
+            }
+            return statusMessage;
+        }
+    
     }
 }

@@ -12,5 +12,7 @@ namespace CanvasRoomDesign.ModelServices
         public Task<StatusMessage<List<DesignItem>>> ListHallItemsBySectionId(Guid id);
 
         public Task<StatusMessage<DesignItem>> UpdateHallItem(DesignItem designItem);
+
+        public Task<StatusMessage> DeleteHallItem(Guid id);
     }
 }

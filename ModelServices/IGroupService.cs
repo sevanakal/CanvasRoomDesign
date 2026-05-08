@@ -13,5 +13,7 @@ namespace CanvasRoomDesign.ModelServices
 
         public Task<StatusMessage<GroupDto>> UpdateGroup(GroupDto groupDto);
 
+        public Task<StatusMessage> DeleteGroup(Guid id);
+
     }
 }
