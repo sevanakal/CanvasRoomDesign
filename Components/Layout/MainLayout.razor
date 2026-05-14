@@ -1,9 +1,30 @@
 ﻿@inherits LayoutComponentBase
 
+<div class="container">
+    <FloatingWidget InitialX="100" InitialY="200" Context="StartDrag">
+        <div class="custom-fab-container" @onmousedown="StartDrag">
+
+            <!-- Animasyonlu + Butonu -->
+            <button class="fab-btn @(isMenuOpen ? "active" : "")" @onclick="ToggleMenu">
+                <!-- Tertemiz SVG + İkonu -->
+                <svg viewBox="0 0 24 24" class="fab-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </button>
+
+            <!-- Sağa Doğru Açılan Menü -->
+            <div class="side-menu @(isMenuOpen ? "show" : "")">
+                <button class="menu-item">Koltuk Ekle</button>
+                <button class="menu-item">Grup Oluştur</button>
+                <button class="menu-item">Duvar Çiz</button>
+            </div>
+
+        </div>
+    </FloatingWidget>
+    
+</div>
+
 @Body
 
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
+

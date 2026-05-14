@@ -1,18 +1,96 @@
-#blazor-error-ui {
-    background: lightyellow;
-    bottom: 0;
-    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
-    display: none;
-    left: 0;
-    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
-    position: fixed;
-    width: 100%;
-    z-index: 1000;
+﻿.container{
+    position:relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: #374151;
 }
 
-    #blazor-error-ui .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
+/* Ana Kapsayıcı: Butonu ve menüyü yatay eksende hizalar */
+.custom-fab-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 20px; /* Sahnede rahat durması için biraz boşluk */
+    top:0; left:0;
+
+}
+
+/* Ana (+) Butonunun Tasarımı */
+.fab-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: #2563eb; /* Şık bir mavi */
+    color: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    z-index: 10;
+}
+
+    .fab-btn:hover {
+        background-color: #1d4ed8;
+        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.6);
+    }
+
+/* SVG İkon Animasyonu */
+.fab-icon {
+    width: 28px;
+    height: 28px;
+    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Hafif yaylanarak döner */
+}
+
+/* Şalter açıldığında (+) ikonu 45 derece döner ve (X) olur */
+.fab-btn.active .fab-icon {
+    transform: rotate(45deg);
+}
+
+/* Şalter açıldığında buton rengi değişsin istersen (opsiyonel) */
+.fab-btn.active {
+    background-color: #ef4444; /* Kırmızımsı iptal rengi */
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+/* Sağa Açılan Menü Konteyneri */
+.side-menu {
+    display: flex;
+    gap: 12px;
+    margin-left: 16px; /* Buton ile menü arasındaki mesafe */
+    /* Animasyon başlangıç değerleri: Görünmez ve sola kaymış durumda */
+    opacity: 0;
+    transform: translateX(-20px);
+    pointer-events: none; /* Gizliyken tıklanmayı engeller */
+
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+    /* Şalter açıldığında menü görünür olur ve yerine oturur */
+    .side-menu.show {
+        opacity: 1;
+        transform: translateX(0);
+        pointer-events: auto; /* Tıklanabilir hale gelir */
+    }
+
+/* Menü İçindeki Alt Butonlar */
+.menu-item {
+    padding: 10px 18px;
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    color: #374151;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+    white-space: nowrap; /* Metnin alt satıra inmesini engeller */
+}
+
+    .menu-item:hover {
+        background-color: #f3f4f6;
+        border-color: #d1d5db;
+        transform: translateY(-2px); /* Üzerine gelince çok hafif yukarı kalkar */
     }

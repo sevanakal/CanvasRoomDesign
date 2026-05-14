@@ -375,6 +375,11 @@ namespace CanvasRoomDesign.Components.Pages
                     appState.ClearSelection();
                     foreach(var item in RemoveItems)
                     {
+                        if (item.GroupId != null) 
+                        {
+                            string groupName = appState.Groups.FirstOrDefault(g => g.Id == item.GroupId)?.Name ?? "";
+                            appState.CheckBlankGroup(groupName);
+                        }
                         appState.RemoveItem(item, notify:false );
                     }
                     RemoveItems = new List<DesignItem>();

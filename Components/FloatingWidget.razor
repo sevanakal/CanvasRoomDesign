@@ -1,0 +1,71 @@
+﻿<div class="floating-widget-base" style="position: absolute; left: @(currentX)px; top: @(currentY)px;" @onmousemove="OnBaseMouseMove" @onmouseup="OnMouseUp">
+
+    @ChildContent(DragStartCallback)
+
+    @if (isDragging)
+    {
+        <div class="drag-glass-shield" @onmousemove="OnShieldMouseMove" @onmouseup="OnMouseUp"></div>
+    }
+</div>
+
+@code {
+    // Dışarıdan Kasanın içine gönderilecek HTML içeriği (Yükümüz)
+    [Parameter] public RenderFragment<EventCallback<MouseEventArgs>> ChildContent { get; set; }
+
+    // Kasanın başlığı ve ilk doğacağı koordinatlar
+    [Parameter] public string Title { get; set; } = "Toolbox";
+    [Parameter] public double InitialX { get; set; } = 50;
+    [Parameter] public double InitialY { get; set; } = 50;
+
+    // Arka Plan Hesaplama Değişkenleri
+    private double currentX;
+    private double currentY;
+    private double startMouseX;
+    private double startMouseY;
+    private bool isMouseDown = false;
+    private bool isDragging = false;
+
+    private EventCallback<MouseEventArgs> DragStartCallback => EventCallback.Factory.Create<MouseEventArgs>(this, OnMouseDown);
+
+    protected override void OnInitialized()
+    {
+        currentX = InitialX;
+        currentY = InitialY;
+    }
+
+    private void OnMouseDown(MouseEventArgs e)
+    {
+        isMouseDown = true;
+        startMouseX = e.ClientX - currentX;
+        startMouseY = e.ClientY - currentY;
+    }
+
+    private void OnBaseMouseMove(MouseEventArgs e)
+    {
+        if (isMouseDown && !isDragging)
+        {
+            isDragging = true;
+        }
+
+        if(isDragging)
+        {
+            currentX = e.ClientX - startMouseX;
+            currentY = e.ClientY - startMouseY;
+        }
+    }
+
+    private void OnShieldMouseMove(MouseEventArgs e)
+    {
+        if (isDragging)
+        {
+            currentX = e.ClientX - startMouseX;
+            currentY = e.ClientY - startMouseY;
+        }
+    }
+
+    private void OnMouseUp(MouseEventArgs e)
+    {
+        isMouseDown = false;
+        isDragging = false;
+    }
+}

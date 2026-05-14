@@ -1,0 +1,41 @@
+﻿.floating-widget {
+    position: absolute;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    border: 1px solid #e5e7eb;
+    z-index: 1000; /* Her şeyin üstünde dursun */
+    user-select: none; /* Sürüklerken metinler seçilmesin */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.widget-header {
+    background: #f3f4f6;
+    padding: 6px 12px;
+    cursor: move; /* Fare imlecini taşıma ikonuna çevir */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 12px;
+    font-weight: 600;
+    color: #4b5563;
+}
+
+.widget-content {
+    padding: 12px;
+    cursor: default; /* Kasanın içindeki butonlara normal tıklansın */
+}
+
+.drag-glass-shield {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    
+    cursor: move; /* Sürükleme imlecini ekranın her yerinde koru */
+    background: transparent; /* Tamamen görünmez */
+}

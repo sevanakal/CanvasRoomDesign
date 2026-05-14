@@ -89,7 +89,7 @@
             if (group != null) { return true; } else { return false; }
         }
 
-        private void CheckBlankGroup(string groupname)
+        public void CheckBlankGroup(string groupname)
         {
             List<Guid> tempGroup= new List<Guid>();
             foreach (var item in Groups)
